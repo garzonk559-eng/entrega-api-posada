@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql_posada
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_123
+      MYSQL_DATABASE: reservation_system
+      MYSQL_USER: posada_admin
+      MYSQL_PASSWORD: posada_password_123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_hotel_data:/var/lib/mysql
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    
+
+  
+  api-posada:
+    build:
+      context: .
+      dockerfile: src/main/docker/Dockerfile.jvm
+    container_name: quarkus_api
+    ports:
+      - "8081:8081"
+    environment:
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://mysql-db:3306/reservation_system
+    depends_on:
+      - mysql-db
+    restart: always
+
+volumes:
+  mysql_hotel_data:

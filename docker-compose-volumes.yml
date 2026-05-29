@@ -17,12 +17,8 @@ services:
       - mysql_hotel_data:/var/lib/mysql
       - ./init-scripts:/docker-entrypoint-initdb.d
     
-
-  
   api-posada:
-    build:
-      context: .
-      dockerfile: src/main/docker/Dockerfile.jvm
+    image: kevingc555/api-posada:1.0
     container_name: quarkus_api
     ports:
       - "8081:8081"
